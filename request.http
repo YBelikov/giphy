@@ -1,0 +1,109 @@
+# api = http://localhost:8000
+
+POST http://localhost:8000/user/yura/generate
+Content-Type: application/json
+
+{
+  "query" : "funny",
+  "forced" : true
+}
+
+###
+POST http://localhost:8000/user/yura/generate
+Content-Type: application/json
+
+{
+  "query" : "earth",
+  "forced" : true
+}
+
+###
+POST http://localhost:8000/user/jack/generate
+Content-Type: application/json
+
+{
+  "query" : "dog",
+  "forced" : true
+}
+
+###
+POST http://localhost:8000/user/yura/generate
+Content-Type: application/json
+
+{
+  "query" : "dog",
+  "forced" : true
+}
+
+
+###
+POST http://localhost:8000/user/roman/generate
+Content-Type: application/json
+
+{
+  "query" : "sea",
+  "forced" : true
+}
+
+###
+POST http://localhost:8000/user/yura/generate
+Content-Type: application/json
+
+{
+  "query" : "fish",
+  "forced" : false
+}
+
+###
+
+GET http://localhost:8000/cache?query
+
+###
+POST http://localhost:8000/cache/generate
+Content-Type: application/json
+
+{
+  "query" : "kids"
+}
+
+###
+POST http://localhost:8000/user/jack/generate
+Content-Type: application/json
+
+{
+  "query" : "kids",
+  "forced" : false
+}
+
+###
+POST http://localhost:8000/user/jack/generate
+Content-Type: application/json
+
+{
+  "query" : "rock",
+  "forced" : false
+}
+
+###
+DELETE http://localhost:8000/cache
+
+###
+GET http://localhost:8000/gifs
+
+###
+GET http://localhost:8000/user/jack/all
+
+###
+GET http://localhost:8000/user/yura/search?query=dog&force=false
+
+###
+DELETE  http://localhost:8000/user/jack/reset?query=egg
+
+###
+DELETE http://localhost:8000/user/yura/clean
+
+###
+DELETE http://localhost:8000/user/yura/history/clean
+
+###
+
