@@ -1,10 +1,9 @@
 package org.ybelikov.bsa.service;
-
-import java.io.FileFilter;
+import java.io.FileNotFoundException;
 import java.util.*;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
+import com.opencsv.CSVWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.ybelikov.bsa.dto.GenerateGifRequestDto;
 import org.ybelikov.bsa.dto.GeneratedGifResponseDto;
 import org.ybelikov.bsa.dto.GifPathsDto;
+import org.ybelikov.bsa.dto.UserHistoryDto;
 import org.ybelikov.bsa.entity.Gif;
 import org.ybelikov.bsa.repository.CacheRepository;
-import org.ybelikov.bsa.repository.UserRepository;
 import org.ybelikov.bsa.util.GeneratedGifResponseDtoToGifMapper;
 
 import java.io.File;
@@ -46,6 +45,21 @@ public class UserService {
         this.mapper = mapper;
     }
 
+    public Optional<List<UserHistoryDto>> getUserHistory(String id) {
+        String userPersonalDirecotryPath = pathToUsersImageFolder + "/" + id;
+        File personalDirectory = new File(userPersonalDirecotryPath);
+        if (!personalDirectory.exists()) {
+            return Optional.empty();
+        }
+        try {
+            Optional<List<UserHistoryDto>> result = cacheRepository.getUserHistory(userPersonalDirecotryPath);
+            return result;
+        }catch(IOException ex) {
+            logger.info(ex.getMessage(), ex);
+            return Optional.empty();
+        }
+    }
+
     public String saveGif(String userName, GeneratedGifResponseDto gifResponseDto) {
         Gif gif = mapper.map(gifResponseDto);
         gif.setPathToGif(pathToUsersImageFolder + "/" + userName + "/" + gif.getKeyWord() + "/" + gif.getId() + extension);
@@ -66,11 +80,14 @@ public class UserService {
         Date date = new Date();
         String currentDate = new SimpleDateFormat("yyyy-mm-dd").format(date);
         try{
-           FileWriter out = new FileWriter(pathToUsersImageFolder + "/" + userName + "/" + "history.csv");
-           CSVPrinter printer = new CSVPrinter(out, CSVFormat.EXCEL);
-           printer.printRecord("date", "query", "path");
-           printer.printRecord(currentDate, gif.getKeyWord(), gif.getPathToGif());
-
+           FileWriter out = new FileWriter(pathToUsersImageFolder + "/" + userName + "/" + "history.csv", true);
+           CSVWriter writer = new CSVWriter(out);
+           List<String[]> lines = new ArrayList<>();
+           lines.add(new String[]{currentDate, gif.getKeyWord(), gif.getPathToGif()});
+           for (String[] line : lines) {
+               writer.writeNext(line);
+           }
+           writer.close();
        }catch(IOException ex) {
             logger.info(ex.getMessage(), ex);
        }

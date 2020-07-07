@@ -2,16 +2,17 @@ package org.ybelikov.bsa.repository;
 
 
 
+import java.io.*;
 import java.util.*;
 
+import com.opencsv.CSVReader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.ybelikov.bsa.dto.UserHistoryDto;
 import org.ybelikov.bsa.entity.Gif;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -70,6 +71,19 @@ public class CacheRepository {
             gifPaths.add(file.getAbsolutePath());
         }
         return Optional.of(gifPaths);
+    }
+
+    public Optional<List<UserHistoryDto>> getUserHistory(String directoryPath) throws FileNotFoundException, IOException {
+        Reader reader = new FileReader(directoryPath + "/" + "history.csv");
+        List<UserHistoryDto> result = new ArrayList<>();
+        List<String[]> lines = new ArrayList<>();
+        CSVReader csvReader = new CSVReader(reader);
+        String[] line;
+        while((line = csvReader.readNext()) != null) {
+            result.add(new UserHistoryDto(line[0], line[1], line[2]));
+        }
+        csvReader.close();
+        return Optional.of(result);
     }
 
     public Optional<String> searchGifInMemoryCache(String id, String query) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.ybelikov.bsa.dto.GenerateGifRequestDto;
 import org.ybelikov.bsa.dto.GeneratedGifResponseDto;
 import org.ybelikov.bsa.dto.GifPathsDto;
+import org.ybelikov.bsa.dto.UserHistoryDto;
 import org.ybelikov.bsa.entity.Gif;
 import org.ybelikov.bsa.service.GifsClient;
 import org.ybelikov.bsa.service.RestGiphyApiClient;
@@ -49,7 +50,10 @@ public class UserController {
         }
         return loadGif(id, generateGifRequestDto);
     }
-
+    @GetMapping("/{id}/history")
+    public ResponseEntity<List<UserHistoryDto>> getUserHistory(@PathVariable String id) {
+        return ResponseEntity.of(userService.getUserHistory(id));
+    }
     @GetMapping("/{id}/all")
     public ResponseEntity<List<GifPathsDto>> allUserFiles(@PathVariable String id) {
         logger.info("All users gifs GET request");

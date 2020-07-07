@@ -67,7 +67,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8000/user/jack/generate
+POST http://localhost:8000/user/robert/generate
 Content-Type: application/json
 
 {
@@ -106,4 +106,16 @@ DELETE http://localhost:8000/user/yura/clean
 DELETE http://localhost:8000/user/yura/history/clean
 
 ###
+GET http://localhost:8000/user/yura/history
 
+###
+###
+POST http://localhost:8000/user/robert/generate
+Content-Type: application/json
+
+{
+  "query" : "city",
+  "forced" : false
+}
+
+###
