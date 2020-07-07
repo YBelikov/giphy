@@ -52,6 +52,7 @@ public class UserController {
     }
     @GetMapping("/{id}/history")
     public ResponseEntity<List<UserHistoryDto>> getUserHistory(@PathVariable String id) {
+        logger.info("GET request for user history");
         return ResponseEntity.of(userService.getUserHistory(id));
     }
     @GetMapping("/{id}/all")
